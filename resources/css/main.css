@@ -1,0 +1,37 @@
+[x-cloak] { display: none !important; }
+.form-group{
+    position: relative;
+}
+
+.calculator {
+    @apply flex flex-col absolute right-0 z-10 rounded-b-md border-gray-300 shadow-lg shadow-slate-400/20
+     bg-white;
+    top: calc(100% + 1px);
+    padding: 0.3rem;
+    max-width: max-content;
+    max-height: min-content;
+    & input.form-input {
+        @apply rounded-md;
+    }
+    & .keyboard-container {
+         @apply flex flex-col justify-center items-center;
+        &-line {
+            @apply w-full grid grid-cols-12 gap-1 m-1;
+            button{
+                &.btn-col-3{
+                    @apply col-span-3;
+                }
+                &.btn-col-6{
+                    @apply col-span-6;
+                }
+            }
+        }
+     }
+}
+.dark .calculator {
+    --tw-bg-opacity: 1;
+    border-color: rgba(var(--dark-300), var(--tw-border-opacity));
+    background-color: rgba(var(--dark-800),var(--tw-bg-opacity));
+    --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+    --tw-shadow-color: rgba(var(--primary), .15);
+}
