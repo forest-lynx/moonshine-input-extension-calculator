@@ -8,6 +8,7 @@ export default (el) => ({
   operators: "+-*/%^",
 
   //TODO добавить логику при работе с полем number min max step
+  //TODO обработка локали для корректного вывода чисел
   init() {
     this.input = el.querySelector("input");
     this.displayField = el.querySelector(".calculator input.formula");
@@ -17,9 +18,10 @@ export default (el) => ({
 
   toggle() {
     this.calculatorShow = !this.calculatorShow;
+
     if (this.calculatorShow) {
       this.formula = this.input.value
-        ? parseFloat(this.input.value).toString()
+        ? this.input.value.replace(/\s/g, "")
         : this.formula;
       this.setDisplayFormula();
     } else {
@@ -28,9 +30,8 @@ export default (el) => ({
       setTimeout(() => this.input.focus(), 10);
     }
   },
-
   keyPress(v) {
-    //TODO проверка на предыдущий символ
+    //TODO предыдущий символ
     if (this.allowedKeys.includes(v)) {
       this.setFormula(v);
       return;
@@ -66,12 +67,19 @@ export default (el) => ({
   },
 
   handleKeyPress(e) {
-    e.preventDefault();
-    if (e.ctrlKey && e.altKey && e.code === "KeyC") {
-      this.toggle();
+    if (this.calculatorShow) {
+      e.preventDefault();
+      if (e.ctrlKey && e.altKey && e.code === "KeyC") {
+        this.toggle();
+        return;
+      }
+      this.keyPress(e.key);
       return;
     }
-    this.keyPress(e.key);
+
+    if (!this.calculatorShow && e.ctrlKey && e.altKey && e.code === "KeyC") {
+      this.toggle();
+    }
   },
 
   calculate() {
@@ -80,7 +88,6 @@ export default (el) => ({
       return null;
     }
     return this.processString(input);
-    //return this.evaluate(this.processString(input));
   },
   processString(str) {
     let result = str;
