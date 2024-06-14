@@ -21,10 +21,10 @@ composer require forest-lynx/moonshine-input-extension-calculator
 //...
 use ForestLynx\MoonShine\InputExtensions\Calculator;
 //...
-Text::make('Pice')
+Text::make('Price')
     ->extension(new Calculator());
 //or
-Text::make('Pice')
+Text::make('Price')
     ->extension(new Calculator(isKeyboard: false));
 ```
 Имеется не обязательный параметр `isKeyboard`, по умолчанию `true`, который отвечает за отображение калькулятора с клавиатурой.
