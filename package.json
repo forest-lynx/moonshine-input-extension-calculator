@@ -1,0 +1,24 @@
+{
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "prettier": "npx prettier --write 'resources/**/*.{css,js,yml}' '!**/views' '!**/dist' '!**/vendor'"
+    },
+    "devDependencies": {
+        "alpinejs": "^3.10.5",
+        "autoprefixer": "^10.4.13",
+        "laravel-vite-plugin": "^1.0.0",
+        "lodash": "^4.17.21",
+        "postcss": "^8.4.31",
+        "postcss-import": "^15.1.0",
+        "postcss-nested": "^6.0.1",
+        "prettier": "3.0.3",
+        "prettier-plugin-tailwindcss": "0.5.6",
+        "tailwindcss": "3.3.5",
+        "vite": "^5.0.0"
+    },
+    "dependencies": {
+    }
+}

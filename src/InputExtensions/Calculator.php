@@ -9,23 +9,21 @@ use MoonShine\InputExtensions\InputExtension;
 class Calculator extends InputExtension
 {
     protected string $view = 'moonshine-fl::input-extensions.calculator';
-    protected string $key = '';
 
-    public function __construct(protected mixed $value = null)
+    protected array $xData = ['flCalculator'];
+
+    protected array $xInit = [
+        '$nextTick(() => { flCalculator = flCalculator($el);
+        flCalculator.init(); })'
+    ];
+
+    public function __construct(protected bool $isKeyboard = true, protected mixed $value = null)
     {
-        $this->key = (string) str()->ulid();
-
-        $this->xData = [
-            "flCalculator",
-        ];
-        $this->xInit = [
-            '$nextTick(() => { flCalculator = flCalculator($el);
-            flCalculator.init(); })'
-        ];
+        parent::__construct($value);
     }
 
-    public function getKey(): string
+    public function isKeyboard(): bool
     {
-        return $this->key;
+        return $this->isKeyboard;
     }
 }

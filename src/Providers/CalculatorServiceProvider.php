@@ -17,8 +17,8 @@ final class CalculatorServiceProvider extends ServiceProvider
         ], ['moonshine-input-extension-calculator', 'laravel-assets']);
 
         moonshineAssets()->add([
-            '/vendor/moonshine-input-extension-calculator/css/flCalculator.css',
-            '/vendor/moonshine-input-extension-calculator/js/flCalculator.js',
+            '/vendor/moonshine-input-extension-calculator/css/main.css',
+            '/vendor/moonshine-input-extension-calculator/js/app.js',
          ]);
     }
 }
