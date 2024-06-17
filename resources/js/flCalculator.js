@@ -1,16 +1,27 @@
 export default (el) => ({
   el: el,
-  input: null,
+  input: {
+    el: null,
+    isNumber: false,
+    min: null,
+    max: null,
+    step: null,
+  },
   calculatorShow: false,
   formula: "",
   displayField: null,
   allowedKeys: "0123456789+-*/(),.%^",
   operators: "+-*/%^",
 
-  //TODO добавить логику при работе с полем number min max step
   //TODO обработка локали для корректного вывода чисел
   init() {
-    this.input = el.querySelector("input");
+    this.input.el = el.querySelector("input");
+    this.input.isNumber = this.input.el.type === "number";
+    if (this.input.isNumber) {
+      this.input.min = this.input.el.min;
+      this.input.max = this.input.el.max;
+      this.input.step = this.input.el.step;
+    }
     this.displayField = el.querySelector(".calculator input.formula");
     this.el.addEventListener("keydown", this.handleKeyPress.bind(this));
     this.calculatorShow = false;
@@ -20,14 +31,14 @@ export default (el) => ({
     this.calculatorShow = !this.calculatorShow;
 
     if (this.calculatorShow) {
-      this.formula = this.input.value
-        ? this.input.value.replace(/\s/g, "")
+      this.formula = this.input.el.value
+        ? this.input.el.value.replace(/\s/g, "")
         : this.formula;
       this.setDisplayFormula();
     } else {
-      this.input.value = this.calculate(this.formula) ?? 0;
+      this.input.el.value = this.formatValue(this.calculate(this.formula) ?? 0);
       this.formula = "";
-      setTimeout(() => this.input.focus(), 10);
+      setTimeout(() => this.input.el.focus(), 10);
     }
   },
   keyPress(v) {
@@ -53,6 +64,20 @@ export default (el) => ({
     this.displayField.value = this.formula;
   },
 
+  formatValue(value) {
+    if (this.input.isNumber) {
+      const fractionDigits = (s) => s.toString().split(".")[1].length || 0;
+      return Math.min(
+        Math.max(
+          value.toFixed(fractionDigits(this.input.step)),
+          this.input.min
+        ),
+        this.input.max
+      );
+    }
+
+    return value;
+  },
   setFormula(v) {
     if (
       (this.formula === "" || this.formula === 0) &&
