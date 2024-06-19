@@ -7,11 +7,17 @@ export default (el) => ({
     max: null,
     step: null,
   },
+  numberOptions: {
+    decimalSeparator: null,
+    thousandsSeparator: null,
+    decimalDigits: 0,
+  },
   calculatorShow: false,
   formula: "",
   displayField: null,
   allowedKeys: "0123456789+-*/(),.%^",
   operators: "+-*/%^",
+  isMask: false,
 
   //TODO обработка локали для корректного вывода чисел
   init() {
@@ -25,8 +31,120 @@ export default (el) => ({
     this.displayField = el.querySelector(".calculator input.formula");
     this.el.addEventListener("keydown", this.handleKeyPress.bind(this));
     this.calculatorShow = false;
+    this.mask();
   },
 
+  mask() {
+    const mask = this.input.el.getAttribute("x-mask");
+    const moneyMask = this.input.el.getAttribute("x-mask:dynamic");
+    if (!mask && !moneyMask) {
+      return null;
+    }
+    if (mask) {
+      this.isMask = this.parseNumberMask(mask);
+    }
+    if (moneyMask) {
+      this.isMask = this.parseMoneyMask(moneyMask);
+    }
+  },
+
+  parseNumberMask(str) {
+    const regex = /\d+|[.,\s]/g;
+    const matches = str.match(regex);
+    if (!matches) {
+      return false;
+    }
+    let isSeparatorStack = false;
+    const stack = [];
+    matches.reverse().map((match, i, ar) => {
+      if (!/\d/.test(match)) {
+        if (stack.includes(match) && !isSeparatorStack) {
+          isSeparatorStack = true;
+        } else {
+          stack.push(match);
+        }
+      }
+    });
+
+    if (stack.length === 2) {
+      this.numberOptions.thousandsSeparator = stack.pop();
+      this.numberOptions.decimalSeparator = stack.pop();
+    } else if (stack.length === 1 && !isSeparatorStack) {
+      this.numberOptions.decimalSeparator = stack.pop();
+    } else if (stack.length === 1 && isSeparatorStack) {
+      this.numberOptions.thousandsSeparator = stack.pop();
+    }
+    this.numberOptions.decimalDigits = /\d/.test(matches[0])
+      ? matches[0].length
+      : 0;
+    const maxNumber = this.numberFormatterParse(str);
+    this.el.max = maxNumber ?? 0;
+    return true;
+  },
+  numberFormatterParse(str) {
+    const { decimalSeparator, thousandsSeparator } = this.numberOptions;
+    const trimmedInput = str.trim();
+    const allowedCharsRegex = new RegExp(
+      `^[-]?[\\d${decimalSeparator}${thousandsSeparator}]*$`,
+      "g"
+    );
+    if (!allowedCharsRegex.test(trimmedInput)) {
+      return null;
+    }
+    const cleanInput = trimmedInput
+      .replace(thousandsSeparator, "")
+      .replace(decimalSeparator, ".");
+
+    if (cleanInput === "") {
+      return null;
+    }
+
+    const parsedValue = parseFloat(cleanInput);
+
+    if (isNaN(parsedValue)) {
+      return null;
+    }
+
+    return parsedValue;
+  },
+  parseMoneyMask(str) {
+    const regex = /\$money\(\$input,(.*?)\)/g;
+    str = regex.exec(str)[1];
+    if (!str) {
+      return false;
+    }
+    let isMark = false;
+    const data = [];
+    for (let char of str) {
+      if (char === " " && !isMark) {
+        continue;
+      }
+      if (char === "'" && !isMark) {
+        isMark = true;
+        continue;
+      }
+      if (char === "'" && isMark) {
+        isMark = false;
+        continue;
+      }
+      if (char === "," && isMark) {
+        data.push(char);
+        continue;
+      }
+      if (char === ",") {
+        continue;
+      }
+      data.push(char);
+    }
+    const [decimalSeparator = ".", thousandsSeparator = "", decimalDigits = 2] =
+      data;
+    this.numberOptions = {
+      decimalSeparator,
+      thousandsSeparator,
+      decimalDigits,
+    };
+    return true;
+  },
   toggle() {
     this.calculatorShow = !this.calculatorShow;
 
@@ -75,8 +193,25 @@ export default (el) => ({
         this.input.max
       );
     }
+    if (this.isMask) {
+      if (this.el.max && value > this.el.max) {
+        value = this.el.max;
+      }
+      return this.numberFormatterFormat(value);
+    }
 
     return value;
+  },
+  numberFormatterFormat(value) {
+    const { decimalSeparator, thousandsSeparator, decimalDigits } =
+      this.numberOptions;
+    const formattedValue = value.toFixed(decimalDigits);
+    const parts = formattedValue.split(".");
+    parts[0] = parts[0].replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      thousandsSeparator ?? ""
+    );
+    return parts.join(decimalSeparator);
   },
   setFormula(v) {
     if (
@@ -151,9 +286,9 @@ export default (el) => ({
       }
       const [fullMatch, expr] = match;
       if (/^-?\d+(?:\.\d+)?$/.test(expr)) {
-        result = result.replace(fullMatch, this.evaluate(fullMatch));
+        result = result.replace(fullMatch, this.evaluate(fullMatch).toString());
       } else {
-        result = result.replace(expr, this.evaluate(expr));
+        result = result.replace(expr, this.evaluate(expr).toString());
         result = this.processPercent(result);
       }
     }
@@ -169,8 +304,14 @@ export default (el) => ({
       /(^-?\d+(?:\.\d+)?)([+\-])(\d+(?:\.\d+)?)%/g,
       "($1$2($1*$3*0.01))"
     );
+
+    expression = expression.replace(
+      /(^-?\d+(?:\.\d+)?)(\/)(\d+(?:\.\d+)?)%/g,
+      "$1$2($3*0.01)"
+    );
     expression = expression.replace(/(\d+(?:\.\d+)?)%/g, "($1*0.01)");
     expression = expression.replace(/%/g, "*0.01");
+
     return this.evaluatePostfix(this.infixToPostfix(expression));
   },
   infixToPostfix(infix) {
