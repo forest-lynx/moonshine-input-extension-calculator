@@ -108,48 +108,39 @@ export default (el) => ({
     return parsedValue;
   },
   parseMoneyMask(str) {
-    const regex = /\$money\(\$input,(.*?)\)/g;
-    str = regex.exec(str)[1];
-    if (!str) {
+    const regexTest =
+      /\$money\(\$input,\s*'([^']*(?:''[^']*)*)'\s*(?:,\s*'([^']*(?:''[^']*)*)')?\s*(?:,\s*'([^']*(?:''[^']*)*)')?\s*(?:,\s*(\d+))?\)/g;
+    const matches = regexTest.exec(str);
+    if (!str.includes("money") && !matches) {
       return false;
     }
-    let isMark = false;
-    const data = [];
-    for (let char of str) {
-      if (char === " " && !isMark) {
-        continue;
-      }
-      if (char === "'" && !isMark) {
-        isMark = true;
-        continue;
-      }
-      if (char === "'" && isMark) {
-        isMark = false;
-        continue;
-      }
-      if (char === "," && isMark) {
-        data.push(char);
-        continue;
-      }
-      if (char === ",") {
-        continue;
-      }
-      data.push(char);
+    if (matches) {
+      const [
+        ,
+        decimalSeparator = ".",
+        thousandsSeparator = "",
+        decimalDigits = 2,
+      ] = matches;
+      this.numberOptions = {
+        decimalSeparator,
+        thousandsSeparator,
+        decimalDigits,
+      };
+    } else {
+      this.numberOptions = {
+        decimalSeparator: ".",
+        thousandsSeparator: "",
+        decimalDigits: 2,
+      };
     }
-    const [decimalSeparator = ".", thousandsSeparator = "", decimalDigits = 2] =
-      data;
-    this.numberOptions = {
-      decimalSeparator,
-      thousandsSeparator,
-      decimalDigits,
-    };
+
     return true;
   },
   toggle() {
     this.calculatorShow = !this.calculatorShow;
 
     if (this.calculatorShow) {
-      this.formula = this.input.el.value
+      this.formula = this.numberFormatterParse(this.input.el.value)
         ? this.input.el.value.replace(/\s/g, "")
         : this.formula;
       this.setDisplayFormula();
