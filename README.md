@@ -1,7 +1,7 @@
 # Input extension - калькулятор
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/forest-lynx/moonshine-decimal-field)](https://github.com/forest-lynx/moonshine-decimal-field)
-[![Total Downloads](https://img.shields.io/packagist/dt/forest-lynx/moonshine-decimal-field)](https://github.com/forest-lynx/moonshine-decimal-field) 
+[![Latest Stable Version](https://img.shields.io/packagist/v/forest-lynx/moonshine-input-extension-calculator)](https://github.com/forest-lynx/moonshine-input-extension-calculator)
+[![Total Downloads](https://img.shields.io/packagist/dt/forest-lynx/moonshine-input-extension-calculator)](https://github.com/forest-lynx/moonshine-input-extension-calculator) 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)\
 [![Laravel](https://img.shields.io/badge/Laravel-11+-FF2D20?style=for-the-badge&logo=laravel)](Laravel) 
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php)](PHP) 
