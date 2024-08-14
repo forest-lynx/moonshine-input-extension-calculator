@@ -4,9 +4,8 @@
 }
 
 .calculator {
-    @apply flex flex-col absolute right-0 z-10 rounded-b-md border-gray-300 shadow-lg shadow-slate-400/20
-     bg-white;
-    top: calc(100% + 1px);
+    @apply flex flex-col absolute top-full translate-y-[1px] right-0 z-20 rounded-b-md border-gray-300 shadow-lg shadow-slate-400/20
+     bg-white max-sm:fixed max-sm:top-1/2 max-sm:left-1/2 max-sm:transform max-sm:-translate-x-1/2 max-sm:-translate-y-1/2;
     padding: 0.3rem;
     max-width: max-content;
     max-height: min-content;
