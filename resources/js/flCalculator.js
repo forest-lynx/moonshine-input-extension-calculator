@@ -31,9 +31,15 @@ export default (el) => ({
     this.displayField = el.querySelector(".calculator input.formula");
     this.el.addEventListener("keydown", this.handleKeyPress.bind(this));
     this.calculatorShow = false;
+    document.addEventListener("click", this.handleOutsideClick.bind(this));
     this.mask();
   },
 
+  handleOutsideClick(event) {
+    if (!this.el.contains(event.target) && this.calculatorShow) {
+      this.toggle();
+    }
+  },
   mask() {
     const mask = this.input.el.getAttribute("x-mask");
     const moneyMask = this.input.el.getAttribute("x-mask:dynamic");
