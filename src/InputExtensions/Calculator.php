@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace ForestLynx\MoonShine\InputExtensions;
 
-use MoonShine\InputExtensions\InputExtension;
+use MoonShine\AssetManager\Css;
+use MoonShine\AssetManager\Js;
+use MoonShine\UI\InputExtensions\InputExtension;
 
 class Calculator extends InputExtension
 {
@@ -25,5 +27,20 @@ class Calculator extends InputExtension
     public function isKeyboard(): bool
     {
         return $this->isKeyboard;
+    }
+
+    protected function assets(): array
+    {
+        return [
+            Css::make('vendor/moonshine-input-extension-calculator/css/main.css'),
+            Js::make('vendor/moonshine-input-extension-calculator/js/app.js')
+        ];
+    }
+
+    protected function viewData(): array
+    {
+        return [
+            'isKeyboard' => $this->isKeyboard(),
+        ];
     }
 }

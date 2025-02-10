@@ -3,6 +3,7 @@
     "private": true,
     "scripts": {
         "dev": "vite",
+        "watch": "vite build --watch",
         "build": "vite build",
         "prettier": "npx prettier --write 'resources/**/*.{css,js,yml}' '!**/views' '!**/dist' '!**/vendor'"
     },
@@ -20,5 +21,6 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
+        "@forest-lynx/string-calculator": "^0.2.1"
     }
 }

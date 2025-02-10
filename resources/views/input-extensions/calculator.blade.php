@@ -1,8 +1,10 @@
-@props(['extension'])
+@props([
+    'isKeyboard' => true
+])
 
 
 <div x-cloak x-show="flCalculator.calculatorShow" class="calculator">
-@if($extension->isKeyboard())
+@if($isKeyboard)
 <x-moonshine::form.input
     disabled="true"
     class="formula"
@@ -59,7 +61,7 @@
 </div>
 <button class="expansion" type="button" @click.prevent="flCalculator.toggle()">
     <x-moonshine::icon
-        icon="heroicons.outline.calculator"
+        icon="calculator"
         size="4"
     />
 </button>

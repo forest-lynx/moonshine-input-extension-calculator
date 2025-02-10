@@ -15,10 +15,5 @@ final class CalculatorServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../public' => public_path('vendor/moonshine-input-extension-calculator'),
         ], ['moonshine-input-extension-calculator', 'laravel-assets']);
-
-        moonshineAssets()->add([
-            '/vendor/moonshine-input-extension-calculator/css/main.css',
-            '/vendor/moonshine-input-extension-calculator/js/app.js',
-         ]);
     }
 }
