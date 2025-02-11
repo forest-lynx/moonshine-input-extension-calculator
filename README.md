@@ -1,3 +1,8 @@
+ <!--
+title: MoonShine Extension - Calculator
+versions: 3
+image: https://github.com/forest-lynx/moonshine-input-extension-calculator/screenshots/preview.png
+-->
 # Input extension - калькулятор
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/forest-lynx/moonshine-input-extension-calculator)](https://github.com/forest-lynx/moonshine-input-extension-calculator)
@@ -10,6 +15,12 @@
 Documentation in [English](./doc/README-EN.md)
 
 Input extension для отображения калькулятора у поля к административной панели [MoonShine](https://moonshine-laravel.com/). 
+
+## Совместимость
+|Версия пакета | Версия админ-панели MoonShine |
+|:---:|:---:|
+| ^1.x | ^2.18.0 |
+| ^2.x | ^3.x |
 
 ## Содержание
 * [Установка](#установка)
@@ -42,7 +53,7 @@ Text::make('Price')
 >[!NOTE]
 >Для активации калькулятора доступно сочетание клавиш `Ctrl+Alt+c` при активном поле, или по кнопке extension поля.
 
-При активном калькуляторе осуществляется отслеживание нажатий клавиш, доступны следующие значения - `[0-9]`, `+`, `-`, `*`, `/`, `=`, `%`, `^`, `.`, `,` , `(`, `)`, `Backspace`, `Enter`, `Escape`.
+При активном калькуляторе осуществляется отслеживание нажатий клавиш, доступны следующие значения - `[0-9]`, `+`, `-`, `*`, `/`, `=`, `%`, `^`, `.`, `,` , `(`, `)`, `Backspace`, `Enter`, `Escape`, `Space`.
 Описание некоторых значений:
 - `%` - вычисление процента,
 - `^` - возведение в степень,

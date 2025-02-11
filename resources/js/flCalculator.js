@@ -6,30 +6,35 @@ export default (el) => ({
     isNumber: false,
   },
   numberOptions: {
-    decimalSeparator: null,
-    thousandsSeparator: null,
-    decimalDigits: 0,
+    decimalSeparator: ".",
+    thousandsSeparator: "",
+    decimalDigits: 2,
     min: null,
     max: null,
   },
   calculatorShow: false,
-  formula: "",
+  calculatorError: false,
+  errorEl: null,
+  formula: "0",
   displayField: null,
   allowedKeys: "0123456789+-*/(),.%^ ",
   operators: "+-*/%^",
   isMask: false,
-  stringCalculator: StringCalculator,
+  stringCalculator: null,
+  errorMessages: null,
 
   //TODO обработка локали для корректного вывода чисел
   init() {
     this.input.el = el.querySelector("input");
-    console.log(this.input.el);
     this.input.isNumber = this.input.el.type === "number";
     if (this.input.isNumber) {
       this.numberOptions.min = this.input.el.min;
       this.numberOptions.max = this.input.el.max;
     }
-    this.displayField = el.querySelector(".calculator input.formula");
+    const calcEl = el.querySelector(".calculator");
+    this.displayField = calcEl.querySelector("input.formula");
+    this.errorMessages = JSON.parse(calcEl.dataset.errorMessages);
+    this.errorEl = el.querySelector(".calculator .calculator-error");
     this.el.addEventListener("keydown", this.handleKeyPress.bind(this));
     this.calculatorShow = false;
     document.addEventListener("click", this.handleOutsideClick.bind(this));
@@ -45,6 +50,7 @@ export default (el) => ({
     const mask = this.input.el.getAttribute("x-mask");
     const moneyMask = this.input.el.getAttribute("x-mask:dynamic");
     if (!mask && !moneyMask) {
+      this.stringCalculator = new StringCalculator();
       return null;
     }
     if (mask) {
@@ -84,11 +90,18 @@ export default (el) => ({
     this.numberOptions.decimalDigits = this.input.isNumber
       ? this.input.el.step.toString().split(".")[1].length || 0
       : /\d/.test(str)
-      ? str.length
-      : 0;
-    this.stringCalculator = new this.stringCalculator(this.numberOptions);
-    const maxNumber = this.stringCalculator.parse(str);
-    this.el.max = maxNumber ?? 0;
+        ? str.length
+        : 0;
+    this.stringCalculator = new StringCalculator(this.numberOptions);
+    this.numberOptions.min = 0;
+    try {
+      const maxNumber = this.stringCalculator.parse(str);
+      this.numberOptions.max = maxNumber;
+    } catch (error) {
+      this.numberOptions.max = 0;
+    }
+    this.stringCalculator = new StringCalculator(this.numberOptions);
+
     return true;
   },
 
@@ -97,6 +110,7 @@ export default (el) => ({
       /\$money\(\$input,\s*'([^']*(?:''[^']*)*)'\s*(?:,\s*'([^']*(?:''[^']*)*)')?\s*(?:,\s*'([^']*(?:''[^']*)*)')?\s*(?:,\s*(\d+))?\)/g;
     const matches = regexTest.exec(str);
     if (!str.includes("money") && !matches) {
+      this.stringCalculator = new StringCalculator(this.numberOptions);
       return false;
     }
     if (matches) {
@@ -111,29 +125,37 @@ export default (el) => ({
         thousandsSeparator,
         decimalDigits,
       };
-    } else {
-      this.numberOptions = {
-        decimalSeparator: ".",
-        thousandsSeparator: "",
-        decimalDigits: 2,
-      };
     }
 
-    this.stringCalculator = new this.stringCalculator(this.numberOptions);
+    this.stringCalculator = new StringCalculator(this.numberOptions);
     return true;
   },
   toggle() {
     this.calculatorShow = !this.calculatorShow;
+    this.calculatorError = false;
 
     if (this.calculatorShow) {
-      this.formula = this.stringCalculator.parse(this.input.el.value)
-        ? this.input.el.value.replace(/\s/g, "")
-        : this.formula;
+      try {
+        this.formula = this.stringCalculator
+          .parse(this.input.el.value)
+          .toString();
+      } catch (error) {
+        this.formula = "0";
+      }
       this.setDisplayFormula();
     } else {
-      this.input.el.value = this.stringCalculator.calculate(this.formula);
-      this.formula = "";
-      setTimeout(() => this.input.el.focus(), 10);
+      try {
+        this.input.el.value = this.stringCalculator.calculate(this.formula);
+        this.formula = "0";
+        setTimeout(() => this.input.el.focus(), 10);
+      } catch (error) {
+        if (error instanceof Error) {
+          this.calculatorShow = true;
+          this.errorEl.textContent =
+            this.errorMessages[error.message] || error.message;
+          this.calculatorError = true;
+        }
+      }
     }
   },
   keyPress(v) {
@@ -150,13 +172,15 @@ export default (el) => ({
       this.formula = this.formula.slice(0, -1);
     }
     if (v === "Escape") {
-      this.formula = "";
+      this.formula = "0";
     }
+
     this.setDisplayFormula();
   },
 
   setDisplayFormula() {
     this.displayField.value = this.formula;
+    this.calculatorError = false;
   },
 
   setFormula(v) {

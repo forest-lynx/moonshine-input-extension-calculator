@@ -1,9 +1,27 @@
 @props([
     'isKeyboard' => true
 ])
+@php
+   $errorMessages = [];
 
+    $errors = [
+        'Invalid characters in a string' => 'calculator-lang-fl::errors::errors.invalid_chars',
+        'Empty input string' => 'calculator-lang-fl::errors.empty_str',
+        'Invalid number format' => 'calculator-lang-fl::errors.invalid_num',
+        'Unbalanced parentheses in expression' => 'calculator-lang-fl::errors.unbal_parens',
+        'Invalid expression' => 'calculator-lang-fl::errors.invalid_expr',
+        'Division by zero' => 'calculator-lang-fl::errors.div_zero',
+        'Empty expression' => 'calculator-lang-fl::errors.empty_expr',
+    ];
 
-<div x-cloak x-show="flCalculator.calculatorShow" class="calculator">
+    foreach ($errors as $key => $langKey) {
+        if (Lang::has($langKey)) {
+            $errorMessages[$key] = __($langKey);
+        }
+    }
+@endphp
+
+<div x-cloak x-show="flCalculator.calculatorShow" class="calculator" data-error-messages='@json($errorMessages)'>
 @if($isKeyboard)
 <x-moonshine::form.input
     disabled="true"
@@ -58,6 +76,7 @@
     </div>
 </div>
 @endif
+<div x-show="flCalculator.calculatorError" class="calculator-error"></div>
 </div>
 <button class="expansion" type="button" @click.prevent="flCalculator.toggle()">
     <x-moonshine::icon

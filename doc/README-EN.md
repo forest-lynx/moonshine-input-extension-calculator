@@ -9,6 +9,12 @@
 
 Input extension to display a calculator by the field to the [MoonShine](https://moonshine-laravel.com/) admin panel. 
 
+## Compatibility
+|Package version | MoonShine Admin Panel Version |
+|:---:|:---:|
+| ^1. x | ^2.18.0 |
+| ^2.x | ^3.x |
+
 ## Contents
 * [Installation](#installation)
 * [Usage](#usege)
@@ -40,7 +46,7 @@ How it looks like in the admin panel:
 >[!NOTE]
 >`Ctrl+Alt+c` key combination is available to activate the calculator when the field is active, or by the field extension button.
 
-Key presses are tracked when the calculator is active, the following values are available - `[0-9]`, `+`, `-`, `*`, `/`, `=`, `%`, `^`, `.`, `,` , `(`, `)`, `Backspace`, `Enter`, `Escape`.
+Key presses are tracked when the calculator is active, the following values are available - `[0-9]`, `+`, `-`, `*`, `/`, `=`, `%`, `^`, `.`, `,` , `(`, `)`, `Backspace`, `Enter`, `Escape`, `Space`.
 Description of some values:
 - `%` - calculation of a percentage,
 - `^` - ascending to a degree,
