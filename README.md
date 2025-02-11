@@ -1,6 +1,6 @@
  <!--
 title: MoonShine Extension - Calculator
-versions: 3
+versions: 2,3
 image: https://github.com/forest-lynx/moonshine-input-extension-calculator/blob/2.x/screenshots/preview.png
 -->
 # Input extension - калькулятор
