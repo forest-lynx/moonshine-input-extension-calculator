@@ -12,7 +12,7 @@ image: https://github.com/forest-lynx/moonshine-input-extension-calculator/blob/
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php)](PHP) 
 [![PHP](https://img.shields.io/badge/Moonshine-2.0+-1B253B?style=for-the-badge)](https://github.com/moonshine-software/moonshine)
 
-Documentation in [English](./doc/README-EN.md)
+Documentation in [English](https://github.com/forest-lynx/moonshine-input-extension-calculator/blob/2.x/doc/README-EN.md)
 
 Input extension для отображения калькулятора у поля к административной панели [MoonShine](https://moonshine-laravel.com/). 
 
@@ -48,7 +48,7 @@ Text::make('Price')
 Как это выглядит в административной панели:
 |С клавиатурой|Без клавиатуры|
 |:--:|:--:|
-|![preview](./screenshots/isKeyboard.png)|![edit](./screenshots/noKeyboard.png)|
+|![preview](https://github.com/forest-lynx/moonshine-input-extension-calculator/blob/2.x/screenshots/isKeyboard.png)|![edit](https://github.com/forest-lynx/moonshine-input-extension-calculator/blob/2.x/screenshots/noKeyboard.png)|
 
 >[!NOTE]
 >Для активации калькулятора доступно сочетание клавиш `Ctrl+Alt+c` при активном поле, или по кнопке extension поля.
