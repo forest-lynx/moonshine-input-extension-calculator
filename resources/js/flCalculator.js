@@ -25,6 +25,7 @@ export default (el) => ({
 
   //TODO обработка локали для корректного вывода чисел
   init() {
+    el.style.position = "relative";
     this.input.el = el.querySelector("input");
     this.input.isNumber = this.input.el.type === "number";
     if (this.input.isNumber) {
@@ -32,6 +33,7 @@ export default (el) => ({
       this.numberOptions.max = this.input.el.max;
     }
     const calcEl = el.querySelector(".calculator");
+    el.appendChild(calcEl);
     this.displayField = calcEl.querySelector("input.formula");
     this.errorMessages = JSON.parse(calcEl.dataset.errorMessages);
     this.errorEl = el.querySelector(".calculator .calculator-error");

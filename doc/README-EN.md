@@ -14,6 +14,7 @@ Input extension to display a calculator by the field to the [MoonShine](https://
 |:---:|:---:|
 | ^1. x | ^2.18.0 |
 | ^2.x | ^3.x |
+| ^3.x | ^4.x |
 
 ## Contents
 * [Installation](#installation)
